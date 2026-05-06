@@ -29,8 +29,8 @@ Questions à se poser (TP) :
       pour que le LLM puisse les citer
     - On limite le nombre de chunks envoyés pour ne pas dépasser la
       taille maximale du contexte du modèle (8192 tokens)
-    - Le modèle llama3-70b-8192 est plus capable que le 8b pour
-      formuler des recommandations argumentées
+    - Le modèle llama-3.3-70b-versatile est plus capable que le 8b
+      pour formuler des recommandations argumentées
 """
 
 import os

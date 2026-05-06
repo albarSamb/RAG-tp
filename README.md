@@ -6,7 +6,7 @@ Systeme RAG (Retrieval-Augmented Generation) de recommandation de films base sur
 
 ### Prerequis
 
-- Python 3.10+
+- Python 3.10+ (teste avec Python 3.13.2)
 - Un compte Groq avec une cle API
 - Le dataset TMDB (`tmdb_5000_movies.csv`) telecharge depuis Kaggle
 
@@ -136,7 +136,7 @@ Alternative consideree : `all-mpnet-base-v2` (anglais uniquement) — ecarte car
 ### Modele LLM : Groq (`llama-3.3-70b-versatile`)
 
 - Groq offre une inference tres rapide grace a ses puces LPU.
-- Le modele 70B est plus capable que le 8B pour formuler des recommandations argumentees et respecter les contraintes du prompt.
+- Le modele `llama-3.3-70b-versatile` est plus capable que les modeles 8B pour formuler des recommandations argumentees et respecter les contraintes du prompt.
 - Temperature 0.7 : un peu de creativite pour les recommandations tout en restant coherent.
 
 ### Filtre par langue
