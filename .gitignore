@@ -1,8 +1,8 @@
-# Données externes (téléchargées depuis Kaggle)
+# Données externes
 data/
 
 # Index FAISS généré par indexation.py
-faiss_index/
+index_data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

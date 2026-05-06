@@ -50,7 +50,7 @@ RAG-tp/
     faiss_index.py             <- creation et persistance de l'index FAISS
     recherche.py               <- recherche vectorielle (top-k)
     generation.py              <- generation de reponse avec Groq
-  faiss_index/                 <- fichiers d'index generes
+  index_data/                  <- fichiers d'index generes
   indexation.py                <- script principal phase 1
   rag.py                       <- script principal phase 2
 ```
@@ -85,7 +85,7 @@ On utilise `json.loads()` pour parser la string JSON en liste de dicts Python, p
 
 ### Q3. Strategie pour ne pas relancer l'indexation a chaque test ?
 
-L'index FAISS et les metadonnees sont sauvegardes sur disque (`faiss_index/films.index` et `faiss_index/films.json`). Le script `rag.py` recharge ces fichiers directement. On ne relance `indexation.py` que si les donnees sources changent.
+L'index FAISS et les metadonnees sont sauvegardes sur disque (`index_data/films.index` et `index_data/films.json`). Le script `rag.py` recharge ces fichiers directement. On ne relance `indexation.py` que si les donnees sources changent.
 
 ### Q4. Comment guider le LLM pour des recommandations pertinentes ?
 

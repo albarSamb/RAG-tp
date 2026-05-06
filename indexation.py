@@ -12,10 +12,13 @@ Usage : python indexation.py
 
 from modules.chargement import charger_films
 from modules.chunking import chunker
+from modules.embedding import charger_modele_embedding, embedder_chunks
+from modules.faiss_index import creer_index_faiss, sauvegarder_index
 
 
 def main():
     chemin_csv = "data/tmdb_5000_movies.csv"
+    chemin_index = "index_data/films"
 
     # ── Étape 1 : Charger et nettoyer les données ──
     print("=" * 60)
@@ -36,7 +39,6 @@ def main():
 
     chunks_avec_meta = []
     for doc in documents:
-        # On découpe le contenu de chaque film en chunks
         chunks = chunker(doc["contenu"], taille_max=500, overlap=50)
         for i, chunk in enumerate(chunks):
             chunks_avec_meta.append({
@@ -47,18 +49,30 @@ def main():
 
     print(f"Total chunks créés : {len(chunks_avec_meta)}")
 
-    # Statistique : combien de films ont été découpés en plusieurs chunks ?
-    films_multi_chunks = sum(
-        1 for doc in documents
-        if len(chunker(doc["contenu"], taille_max=500, overlap=50)) > 1
-    )
-    print(f"Films découpés en plusieurs chunks : {films_multi_chunks}")
+    # ── Étape 3 : Créer les embeddings ──
+    print("\n" + "=" * 60)
+    print("ÉTAPE 3 — Embeddings")
+    print("=" * 60)
 
-    # Aperçu d'un chunk
-    print("\n--- Aperçu du premier chunk ---")
-    print(f"Chunk ID : {chunks_avec_meta[0]['chunk_id']}")
-    print(f"Contenu : {chunks_avec_meta[0]['contenu'][:200]}...")
-    print(f"Metadata : {chunks_avec_meta[0]['metadata']}")
+    modele = charger_modele_embedding()
+    textes = [c["contenu"] for c in chunks_avec_meta]
+    vecteurs = embedder_chunks(textes, modele)
+
+    # ── Étape 4 : Créer et sauvegarder l'index FAISS ──
+    print("\n" + "=" * 60)
+    print("ÉTAPE 4 — Index FAISS")
+    print("=" * 60)
+
+    index = creer_index_faiss(vecteurs)
+    sauvegarder_index(index, chunks_avec_meta, chemin_index)
+
+    # ── Résumé ──
+    print("\n" + "=" * 60)
+    print("INDEXATION TERMINÉE")
+    print(f"  → {len(documents)} films traités")
+    print(f"  → {len(chunks_avec_meta)} chunks indexés")
+    print(f"  → Index sauvegardé dans {chemin_index}.*")
+    print("=" * 60)
 
 
 if __name__ == "__main__":
