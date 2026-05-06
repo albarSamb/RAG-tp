@@ -11,6 +11,7 @@ Usage : python indexation.py
 """
 
 from modules.chargement import charger_films
+from modules.chunking import chunker
 
 
 def main():
@@ -27,6 +28,37 @@ def main():
     print(f"ID : {documents[0]['id']}")
     print(f"Contenu : {documents[0]['contenu'][:200]}...")
     print(f"Metadata : {documents[0]['metadata']}")
+
+    # ── Étape 2 : Découper en chunks ──
+    print("\n" + "=" * 60)
+    print("ÉTAPE 2 — Chunking")
+    print("=" * 60)
+
+    chunks_avec_meta = []
+    for doc in documents:
+        # On découpe le contenu de chaque film en chunks
+        chunks = chunker(doc["contenu"], taille_max=500, overlap=50)
+        for i, chunk in enumerate(chunks):
+            chunks_avec_meta.append({
+                "contenu": chunk,
+                "metadata": doc["metadata"],
+                "chunk_id": f"{doc['id']}_chunk_{i}"
+            })
+
+    print(f"Total chunks créés : {len(chunks_avec_meta)}")
+
+    # Statistique : combien de films ont été découpés en plusieurs chunks ?
+    films_multi_chunks = sum(
+        1 for doc in documents
+        if len(chunker(doc["contenu"], taille_max=500, overlap=50)) > 1
+    )
+    print(f"Films découpés en plusieurs chunks : {films_multi_chunks}")
+
+    # Aperçu d'un chunk
+    print("\n--- Aperçu du premier chunk ---")
+    print(f"Chunk ID : {chunks_avec_meta[0]['chunk_id']}")
+    print(f"Contenu : {chunks_avec_meta[0]['contenu'][:200]}...")
+    print(f"Metadata : {chunks_avec_meta[0]['metadata']}")
 
 
 if __name__ == "__main__":
