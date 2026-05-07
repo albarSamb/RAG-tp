@@ -39,30 +39,23 @@ from dotenv import load_dotenv
 from groq import Groq
 
 
-def construire_prompt_systeme() -> str:
+def construire_prompt_systeme(chemin: str = "prompt_systeme.txt") -> str:
     """
-    Retourne le prompt système qui définit le comportement du LLM.
+    Charge le prompt système depuis un fichier texte externe.
 
-    Ce prompt est envoyé UNE FOIS au début de la conversation.
-    Il cadre le LLM pour qu'il se comporte en expert cinéma
-    et respecte les contraintes du TP.
+    Pourquoi un fichier séparé ?
+    → On peut modifier le comportement du LLM (ton, contraintes, format)
+      sans toucher au code Python. C'est plus modulaire et plus facile
+      à itérer.
+
+    Args:
+        chemin: chemin vers le fichier contenant le prompt système
+
+    Returns:
+        Le contenu du fichier prompt_systeme.txt
     """
-    return """Tu es un expert en cinéma et recommandation de films.
-
-RÈGLES STRICTES :
-- Tu ne recommandes QUE des films présents dans le contexte fourni ci-dessous.
-- Tu ne dois JAMAIS inventer un film, un titre, une note ou un synopsis.
-- Si aucun film du contexte ne correspond à la demande, dis-le honnêtement.
-- La base de données contient des films jusqu'à environ 2017. Si l'utilisateur
-  demande un film très récent, signale que ta base ne couvre pas cette période.
-
-FORMAT DE RÉPONSE :
-- Pour chaque film recommandé, cite : le titre, l'année et la note sur 10.
-- Explique en 1-2 phrases pourquoi ce film correspond à la demande.
-- À la fin, indique les sources (numéros des chunks utilisés).
-
-LANGUE :
-- Réponds toujours en français, même si les synopsis sont en anglais."""
+    with open(chemin, "r", encoding="utf-8") as f:
+        return f.read()
 
 
 def generer_reponse(question: str, chunks_pertinents: list[dict]) -> str:
